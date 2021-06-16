@@ -11,6 +11,9 @@ const $buffer = new (require('consolelinebufferrc')).base();
  */
 
 const boxrcbase = function(){
+    this.clear = function (){
+        return $buffer.clear();
+    }
     this.add = function (line){
         return $buffer.add(line);
     }

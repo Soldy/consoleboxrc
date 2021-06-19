@@ -18,6 +18,12 @@ const boxrcbase = function(){
         return $buffer.clear();
     }
     /*
+    * @public
+    */
+    this.clean = function (){
+        return _clean();
+    }
+    /*
     * @param {string}
     * @public
     */
@@ -78,8 +84,26 @@ const boxrcbase = function(){
         }
     });
     /*
-    * @param {string}
-    * @param {string}
+    * @private
+    */
+    const _clean = function (){
+        const start = _get('top');
+        const end = _get('rows') + start;
+        const left = _get('left');
+        const screen = ''.padEnd(
+            _get('columns')
+        );
+        let s = 0;
+        for (let i = start; end > i ; i++){
+            $stdio.printTo(
+                screen,
+                left,
+                i
+            );
+            s++;
+        }
+    }
+    /*
     * @private
     */
     const _print = function (){

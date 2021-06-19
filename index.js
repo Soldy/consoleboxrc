@@ -11,43 +11,49 @@ const $buffer = new (require('consolelinebufferrc')).base();
  */
 
 const boxrcbase = function(){
+    /*
+    * @public
+    */
     this.clear = function (){
         return $buffer.clear();
     }
+    /*
+    * @param {string}
+    * @public
+    */
     this.add = function (line){
         return $buffer.add(line);
     }
+    /*
+    * @public
+    */
     this.print=function(){
-        let start = _setup.get('top');
-        let end = _setup.get('rows') + start;
-        let left = _setup.get('left');
-        let screen = $buffer.screen();
-        let s = 0;
-        for (let i = start; end > i ; i++){
-            $stdio.printTo(
-                screen[s],
-                left,
-                i
-            );
-            s++;
-        }
+        return _print();
     }
+    /*
+    * @param {integer}
+    * @param {integer}
+    * @public
+    */
+    this.move = function(x,y){
+        _move(x,y)
+    }
+    /*
+    * @param {integer}
+    * @param {integer}
+    * @public
+    */
     this.resize=function(width,height){
-        setup.width  = width;
-        setup.height = height;
-        lineBuffer.setScreen(width, height);
+        _resize(width, height);
     }
+    /*
+    * @param {string}
+    * @param {any}
+    * @public
+    */
     this.set = function(name, value){
         _setup.set(name, value);
         $buffer.set(name, value);
-    }
-    let bufferSizeRegulator = function(){
-
-    }
-    let render = function (){
-    }
-    let print = function (){
-        
     }
     /*
     * @private
@@ -71,13 +77,62 @@ const boxrcbase = function(){
             'default' : 100
         }
     });
+    /*
+    * @param {string}
+    * @param {string}
+    * @private
+    */
+    const _print = function (){
+        const start = _get('top');
+        const end = _get('rows') + start;
+        const left = _get('left');
+        const screen = $buffer.screen();
+        let s = 0;
+        for (let i = start; end > i ; i++){
+            $stdio.printTo(
+                screen[s],
+                left,
+                i
+            );
+            s++;
+        }
+    }
+    /*
+    * @param {integer}
+    * @param {integer}
+    * @private
+    */
+    const _move = function(x,y){
+        _set('left', x);
+        _set('top', y);
+    }
+    /*
+    * @param {integer}
+    * @param {integer}
+    * @private
+    */
+    const _resize=function(width,height){
+        _set('colunns', width);
+        _set('rows', height);
+        $buffer.setScreen(width, height);
+    }
+    /*
+    * @param {string}
+    * @private
+    * @return {boolean}
+    */
     const _get = function (name){
         return _setup.get(name);
     }
-    const _set = function (name){
-        return _setup.get(name);
+    /*
+    * @param {string}
+    * @param {any}
+    * @private
+    * @return {boolean}
+    */
+    const _set = function (name, val){
+        return _setup.set(name, val);
     }
-
 }
 
 exports.base = boxrcbase;
